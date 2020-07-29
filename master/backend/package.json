@@ -1,0 +1,31 @@
+{
+  "name": "arduino_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "dev:debug": "nodemon --inspect src/server.js",
+    "build": "sucrase ./src -d ./build --transforms imports",
+    "db:migrate": "sequelize db:migrate",
+    "db:seed": "sequelize db:seed:all"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "moment": "^2.27.0",
+    "pg": "^8.2.1",
+    "sequelize": "^6.3.0",
+    "socket.io": "^2.3.0",
+    "sucrase": "^3.15.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
+}

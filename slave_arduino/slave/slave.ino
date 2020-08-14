@@ -3,14 +3,16 @@
 #include <SocketIoClient.h>
 #include <string.h>
 #include <ArduinoJson.h>
+#include "fauxmoESP.h"
 
 const char *ssid = "Pegoretti";
 const char *password = "dda12345";
 
-const char *socketServer = "10.0.0.120";
-const int socketPort = 80;
+const char *socketServer = "carlospeg.kinghost.net";
+const int socketPort = 21533;
 
 SocketIoClient socket;
+fauxmoESP fauxmo;
 
 void togglePin(const char *payload, size_t length){
   DynamicJsonDocument doc(128);
@@ -36,6 +38,17 @@ void setup(){
   Serial.print("Flash ID: ");
   Serial.println(ESP.getFlashChipId());
 
+  fauxmo.addDevice("Aerador 1");
+  fauxmo.addDevice("Aerador 2");
+  
+  fauxmo.setPort(80); // required for gen3 devices
+  fauxmo.enable(true);
+  
+  fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
+      digitalWrite(device_id == 1 ? 4 : 5, state ? HIGH : LOW);
+      socket.emit("toggle", jsonJoin.c_str());
+    });  
+
   socket.begin(socketServer, socketPort);     
   socket.on("pin", togglePin);
   DynamicJsonDocument doc(128);
@@ -45,4 +58,5 @@ void setup(){
 
 void loop(){
   socket.loop();
+  fauxmo.handle();
 }
